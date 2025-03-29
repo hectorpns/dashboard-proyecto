@@ -1,24 +1,31 @@
+import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# Carga el archivo CSV con manejo de errores
-file_path = "vehicles_us.csv"  # Asegúrate de que la ruta es correcta
+# Título de la aplicación
+st.title("Análisis de Vehículos en Venta")
+
+# Cargar el archivo CSV con manejo de errores
+# Asegúrate de que el archivo esté en el mismo directorio
+file_path = "vehicles_us.csv"
 try:
     car_data = pd.read_csv(file_path)
-    print("Archivo CSV cargado correctamente.")
-    print(car_data.head())  # Muestra las primeras filas para verificar
+    st.write("Archivo CSV cargado correctamente.")
+    st.write(car_data.head())  # Muestra las primeras filas para verificar
 except FileNotFoundError:
-    print(f"Error: No se encontró el archivo en {file_path}")
-    exit()  # Termina el script si el archivo no existe
+    st.error(f"Error: No se encontró el archivo en {file_path}")
+    st.stop()  # Detiene la ejecución de la app
 except Exception as e:
-    print(f"Error al cargar el archivo: {e}")
-    exit()
+    st.error(f"Error al cargar el archivo: {e}")
+    st.stop()
 
 # Crear histograma del odómetro
+st.subheader("Distribución del Odómetro")
 fig1 = px.histogram(car_data, x="odometer", title="Distribución del Odómetro")
-fig1.show()
+st.plotly_chart(fig1)
 
 # Crear scatter plot de odómetro vs precio
+st.subheader("Relación entre Precio y Odómetro")
 fig2 = px.scatter(car_data, x="odometer", y="price",
                   title="Precio vs Odómetro")
-fig2.show()
+st.plotly_chart(fig2)
